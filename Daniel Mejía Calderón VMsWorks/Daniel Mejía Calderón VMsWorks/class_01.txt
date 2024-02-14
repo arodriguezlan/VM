@@ -1,0 +1,1166 @@
+===============================================================================================
+Institute....: Universidad Técnica Nacional
+Campus.......: Pacífico
+Career.......: Tecnologías de Información
+Course.......: ITI-621 - Tecnología y Sistemas WEB III
+Period.......: 1-2024
+Document.....: 01_React_Fundamentals.txt
+Goals........: Create development environment
+				- Create virtual machine with Ubuntu Server 22.04 lts version 3
+				- Install Docker environment
+                - Install NodeJs tools
+				- Create a single React application (only for testing)
+				- Update Visual Studio Code
+				- Connect the developer tool with remote React project
+Professor....: Jorge Ruiz (york)
+Student......:
+===============================================================================================
+
+Step 01 - Install tools on Windows machine
+
+	- NodeJS 20.10.0 LTS from https://nodejs.org/en 
+	
+		- ensure you have of the application route stored into the
+		- environment variable called Path
+		
+		
+	- Open PowerShell or CMD terminal and writes:
+
+		node --version		(20.10.0)
+		npm --version		(10.2.3)		
+		npx --version		(10.2.3)		
+		
+		npm install -g react-devtools
+		npm install -g eslint
+	
+	
+	- Install REACT plugins, open the web-browser and uses one of the link below 
+	
+		- FireFox.........: https://addons.mozilla.org/en-US/firefox/addon/react-devtools/
+		- Google Chrome...: https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en
+		- Microsoft Edge..: https://microsoftedge.microsoft.com/addons/detail/react-developer-tools/gpphkfbcpidddadnkolkpfckpihlkkil
+	
+		- Brave...........: uses the the Google Chrome link
+	
+	
+	- Install plugins into Microsoft Visual Code
+	
+		- Open Microsoft Visual Code and add plugins, and search:
+
+			- ESLint or install from the next link: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+	
+			- Prettier-Code formatter	
+
+			- Remote - SSH			
+		
+			- Remote Development	
+		
+			- Remote Explorer		
+		
+
+Step 02 - Create a virtual machine
+
+	- Name...................: usDocker
+	- CPU....................: 2 cores
+	- Memory.................: 16384 Mbs
+	- Disk...................: 65Gbs
+	- Audio..................: Disable
+	- Network................: Bridget Adapter
+		- Promiscuous Mode...: Allow All
+		- Cable coonnected...: Check in
+	- USB 3.0	
+	
+	
+Step 03 - Start installation 	
+	
+	- Try or install Ubuntu Server
+	
+	- Select language
+	
+	- Installer update available (take a choice)
+	
+	- Keyboard layout configuration (take a choice)
+	
+	- Network connections
+	
+		- enp0s3	eth
+		- DHCPv4	10.236.2.115/24
+
+
+	- Configure proxy, only is required
+	
+	- Configure Ubuntu archive mirror
+	
+		- Mirror address: http://archive.ubuntu.com/ubuntu/
+
+
+	- Guided storage configuration
+
+		- Use an entire	disk.................: check in
+		- Set up this disk as an LVM group...: check out
+		
+		
+	- Profile setup
+	
+		- Your name...........: merlina addams
+		- Your servers name...: usdocker
+		- Pick a username.....: maddams
+		- Choose a password...: caramia2K23*
+	
+	
+	- Upgrade to Ubuntu Pro...: Skip for now
+	
+	- SSH Setup:
+	
+		- Install OpenSSH Server...: Check in
+		- Import SSH identity......: No
+		
+		
+	- Featured Server Snaps:
+
+		- Don't select anythings
+		
+		
+	Note:
+		This installation take awhile, please take a coffee cup
+		
+		
+Paso 04 - Actualizar instalación (recuerde ingresar como sudo)
+
+	apt update
+	apt upgrade (si es requerido)
+	
+	apt install net-tools
+	apt install build-essential
+	apt install curl
+
+
+Step 05 - Connect with your new remote server		
+		
+	- Open PowerShell on Windows
+
+	- Write the next sentence:	(remember change the username and ip address)
+	
+		ssh maddams@10.236.2.115
+		
+		- Acceppt the fingerprint
+		
+		
+	- Changes to power user 	
+	
+		sudo su
+
+
+Step 06 - Install tools, services and required files:
+
+	- Update system
+	
+		apt update
+		
+		apt upgrade	
+		
+		
+	- Add Docker's official GPG key:	
+
+		apt-get install ca-certificates curl gnupg
+		
+		install -m 0755 -d /etc/apt/keyrings
+		
+		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+		
+		
+	- Add the repository to Apt sources: (this is a long sentence)
+
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+		
+		apt update
+	
+	
+	- Install Docker:
+	
+		apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+		
+		
+	- Validate installation
+
+		systemctl status docker
+		
+		
+	- Configure Docker to start on boot with systemd:
+
+		systemctl enable docker.service
+		
+		systemctl enable containerd.service
+		
+		
+Step 07 - Manage Docker as a non-root user
+
+	- Create the docker group: (maybe the group exist)
+	
+		groupadd docker
+		
+		
+	- Add your user to the docker group: (remember change the username)
+
+		usermod -aG docker maddams
+		
+	- Reboot your virtual machine
+
+		reboot
+		
+		
+Step 08 - Verify that you can run docker commands without sudo:
+
+	- Execute the next command:
+	
+		docker run hello-world
+		
+		You can see the next message:
+		
+			Unable to find image 'hello-world:latest' locally
+			latest: Pulling from library/hello-world
+			719385e32844: Pull complete
+			Digest: sha256:c79d06dfdfd3d3eb04cafd0dc2bacab0992ebc243e083cabe208bac4dd7759e0
+			Status: Downloaded newer image for hello-world:latest
+
+			Hello from Docker!
+			This message shows that your installation appears to be working correctly.
+
+			To generate this message, Docker took the following steps:
+			 1. The Docker client contacted the Docker daemon.
+			 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+				(amd64)
+			 3. The Docker daemon created a new container from that image which runs the
+				executable that produces the output you are currently reading.
+			 4. The Docker daemon streamed that output to the Docker client, which sent it
+				to your terminal.
+
+			To try something more ambitious, you can run an Ubuntu container with:
+			 $ docker run -it ubuntu bash
+
+			Share images, automate workflows, and more with a free Docker ID:
+			 https://hub.docker.com/
+
+			For more examples and ideas, visit:
+			 https://docs.docker.com/get-started/
+			 
+	
+	- Show the all containers and images
+	
+		docker ps -a
+		
+		docker images
+	
+	- Be happy
+
+
+Step 09 - Install NodeJS
+
+	- Download and import the Nodesource GPG key
+	
+		sudo apt-get update
+		
+		sudo apt-get install -y ca-certificates curl gnupg
+		
+		sudo mkdir -p /etc/apt/keyrings
+		
+		curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+		
+		
+	- Create deb repository: (execute both line in the same time)	
+		
+		NODE_MAJOR=20
+		echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+		
+		curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+		
+		
+		
+	- Run Update and Install
+
+		sudo apt-get update
+		
+		sudo apt-get install nodejs -y
+		
+		
+	- Validates version installed
+
+		node -- version		(v20.10.0)
+		
+		npm --version		(10.2.3)
+		
+		npx --version		(10.2.3)
+		
+	
+	- Restart your virtual machine
+
+		reboot
+		
+
+Step 10 - Create new project (linux)
+
+	- Using powerShell or cmd terminal, open your work directory:
+	
+		mkdir web_01
+		
+		cd web_01
+		
+		npx --yes create-react-app"@latest" . --template typescript
+		
+		
+	- Open your favorite IDE, I suppose Microsoft Visual Code and open ../../web_01 directory as project
+	
+
+Step 11 - Open Visual Code
+
+	- Select Remote Explorer Icon in left pane
+	
+		- Select Remotes (Tunnels/SSH) 
+		
+			- Select SSH and press + button (at right)
+			
+				Enter SSH Connection Command
+				
+					Eg. ssh jruiz@10.236.2.115		(you must changes user and ip address)
+					
+					- Press Enter button
+					
+					
+			- Select SSH configuration file to update
+			
+				Eg. C:\User\madamms\.ssh\config
+
+
+			- Open config file
+			
+				you can see:
+				
+					Host 10.236.2.115
+					HostName 10.236.2.115
+					User madamms				(you can change the username)
+					
+				
+			- Close this file	
+			
+		- On Remotes (Tunnels/SHH) press Refresh Button
+		
+			- You must see the new ssh connection
+
+
+		- Open remote connection 
+		
+			Please enter password.
+			
+	
+Step 12 - Update the React Project	
+
+	- Open the IDE terminal and execute the next codes:	
+		
+		npm install react-router-dom
+		
+	
+	- Delete files unnecesaries
+	
+		- In the src directory, delete the next files:
+		
+			- App.test.tsx
+			
+			- app.css
+			
+			- reportWebVitals.ts
+			
+			- setupTests.ts
+			
+			
+	- Open src/index.css
+
+		- Delete all code and writes:
+		
+			body {
+			  margin: 0;
+			  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+				'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+				sans-serif;
+			  -webkit-font-smoothing: antialiased;
+			  -moz-osx-font-smoothing: grayscale;
+
+			  background-color: #282c34;
+			  color: white;
+			}			
+			
+		- Save changes
+	
+	- Open src/App.tsx
+
+		- Delete all code and writes:
+		
+			import React from 'react';
+
+			function App() {
+			  return (
+				<div className="container">
+					<h1>Hola mundo</h1>
+					<p>
+						Esto es solo una prueba de lo que podemos realizar con React Web. <br/>
+						Esto incluye el uso de Bootstrap, el redireccionamiento entre las páginas del sitio web, así como el uso de hojas de estilo.
+						<br/>
+						<b>Usando JavaScript con el estándar EC6.</b>
+						<br/>
+						Entre los temas que se abordarán en esta clase se encuentran:
+					</p>
+					<ul>
+						<li>Declaración de variables y constantes.</li>
+						<li>Estructuras de control.</li>
+						<li>Declaración y uso de funciones.</li>
+						<li>Fundamentos de Programación Orientada a Objetos.</li>
+					</ul>
+				</div>
+			  );
+			}
+
+			export default App;
+			
+		- Save changes
+	
+	
+Step 13 - Add first component:
+
+	- Into the src folder, creates new folder called components
+	
+	- Into the src/components folder, creates new file called navBar.tsx
+		
+	- Open src/components/navBar.tsx and writes:
+		
+		import React from 'react';
+		import {Link} from 'react-router-dom';
+		import logo from '../logo.svg';
+
+		const NavBar =  () => {
+			return (
+				<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+					<Link className="navbar-brand" to="/">
+						<img src={logo} width="40" height="40" alt="Logo de la empresa" />
+					</Link>
+					<Link className="navbar-brand text-primary" to="/">React Bootstrap</Link>
+					<button className="navbar-toggler"
+							type="button"
+							data-toggle="collapse"
+							data-target="#navbarNavAltMarkup"
+							aria-controls="navbarNavAltMarkup"
+							aria-expanded="false">
+						<span className="navbar-toggler-icon" />
+					</button>
+					<div className="collapse navbar-collapse" id="nvbarNavAltMarkup">
+						<ul className="navbar-nav m-auto">
+							<li className="nav-item">
+								<Link to="/" className="nav-link">Inicio</Link>
+							</li>
+							<li className="nav-item">
+								<Link to="/variables" className="nav-link">Variables</Link>
+							</li>
+							<li className="nav-item">
+								<Link to="/estructuras" className="nav-link">Estructuras</Link>
+							</li>
+							<li className="nav-item">
+								<Link to="/funciones" className="nav-link">Funciones</Link>
+							</li>
+							<li className="nav-item">
+								<Link to="/about" className="nav-link">Acerca de</Link>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			);
+		}
+
+		export default NavBar;
+			
+	- Save changes
+		
+
+Step 14 - Update index.html with boostrap libraries
+
+	- Open public/index.html
+	
+		- In the head section (before a title tag) writes:
+
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+				  rel="stylesheet"
+				  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+				  crossorigin="anonymous">
+				  
+				  
+		- In the body section, at the end, writes:
+		
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+				    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+				    crossorigin="anonymous"></script>
+
+	- Save changes
+
+
+Step 15 - Update index component
+
+	- Open src/index.tsx
+	
+		- Delete all code and writes:
+		
+			import React from 'react';
+			import ReactDOM from 'react-dom/client';			
+			import './index.css'
+
+			import App from './App';
+			import NavBar from "./components/navBar";
+			import { BrowserRouter } from 'react-router-dom'
+
+			const root = ReactDOM.createRoot(
+			  document.getElementById('root') as HTMLElement
+			);
+
+			root.render(
+			  <BrowserRouter>
+				<NavBar />
+				<App />
+			  </BrowserRouter>
+			);
+			
+		- Save changes	
+			
+			
+Step 16 - Test changes
+
+	- Open the window terminal into Visual Code or your favorite IDE
+			
+		- Then execute the next command
+
+			npm start		
+			
+		You can see the next message:
+		
+			Compiled successfully!                           
+
+			You can now view web_01 in the browser.          
+
+			  Local:            http://localhost:3000        
+			  On Your Network:  http://10.236.2.142:3000     
+			  
+
+		- Be happy...!
+		
+		
+Step 17 - Add pages.
+
+	- Into the src folder, creates new folder called pages
+	
+	- Into the src/pages folder, creates the next files:
+	
+		- acercade.tsx				
+		- funciones.tsx
+		- modulos.tsx
+		- variables.tsx
+		
+		
+Step 18	- Update Acerca de page:
+
+	- Open src/pages/acercade.tsx and writes:
+		
+		import React from 'react';
+
+		const Acercade = () => {
+			return (
+				<div className="container">
+					<h3>Acerca de</h3>
+					<p>
+						Esta demostración fue creada para el curso de <b>ITI-621 - Tecnologías y 
+						Sistemas Web III</b> de la carrera de <b>Tecnologías de Información</b> 
+						para la <b>Sede del Pacífico de la UTN</b>, utilizando elementos de:<br/>
+					</p>
+					<ul>
+						<li>HTML y CSS</li>
+						<li>JavaScript</li>
+						<li>Bootstrap</li>
+						<li>NodeJS</li>
+						<li>React</li>
+						<li>React Router</li>
+					</ul>
+				</div>
+			);
+		}
+
+		export default Acercade;
+		
+	- Save changes	
+		
+			
+Step 19 - Update Variables page:
+
+	- Open src/pages/variables.tsx and writes:
+
+		import React from 'react';
+
+		// Declaring variables and constants
+		const nombre = 'Merlina Addams';
+		const pi = 3.1416;
+
+		var entero = 45;
+		var precio = 45.99;
+		var booleano = true;
+
+		let nombre2 : string;
+		nombre2 = 'Morticia Addams';
+
+		let fecha = new Date();
+
+		// Declaring arrays
+		let nombres : string[] = ['Merlina Addams', 'Morticia Addams', 'Homero Addams', 'Tío Cosa Addams'];
+		nombres.push('Tío Lucas Addams');
+		nombres.push('Pericles Addams');
+
+
+		// Declaring associative arrays
+		var familia = [{nombre: 'Merlina Addams', edad: 18},
+					   {nombre: 'Morticia Addams', edad: 45},
+					   {nombre: 'Homero Addams', edad: 50}];
+			
+			
+		var matriz = [[{nombre: 'Merlina Addams', edad: 18},{nombre: 'Morticia Addams', edad: 45},{nombre: 'Homero Addams', edad: 50}],
+					  [{nombre: 'Herman Munster', edad: 48},{nombre: 'Lily Munster',    edad: 43},{nombre: 'Eddie Munster', edad: 12}]];
+
+		const Variables = () => {
+			return (
+				<div className="container">
+					<h3>Variables y Constantes</h3>
+					<br/>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>Epresión</th>
+								<th>Definición</th>
+								<th>Tipo</th>
+								<th>Valor</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Nombre</td>
+								<td>Constante</td>
+								<td>{typeof nombre}</td>
+								<td>{nombre}</td>
+							</tr>
+							<tr>
+								<td>pi</td>
+								<td>Constante</td>
+								<td>{typeof pi}</td>
+								<td>pi</td>
+							</tr>
+							<tr>
+								<td>entero</td>
+								<td>Variable</td>
+								<td>{typeof entero}</td>
+								<td>{entero}</td>
+							</tr>
+							<tr>
+								<td>precio</td>
+								<td>Variable</td>
+								<td>{typeof precio}</td>
+								<td>{precio}</td>
+							</tr>
+							<tr>
+								<td>booleano</td>
+								<td>Variable</td>
+								<td>{typeof booleano}</td>
+								<td>{booleano}</td>
+							</tr>
+							<tr>
+								<td>nombre2</td>
+								<td>Variable (let)</td>
+								<td>{typeof nombre2}</td>
+								<td>{nombre2}</td>
+							</tr>
+							<tr>
+								<td>fecha</td>
+								<td>Variable (let)</td>
+								<td>{typeof fecha}</td>
+								<td>{fecha.toString()}</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<br/>
+					<h4>Usando expresiones de tipo Fecha:</h4>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>Formato</th>
+								<th>Valor</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Fecha corta</td>
+								<td>{fecha.toLocaleDateString()}</td>
+							</tr>
+							<tr>
+								<td>Fecha larga</td>
+								<td>{fecha.toLocaleString()}</td>
+							</tr>
+							<tr>
+								<td>Fecha ISO</td>
+								<td>{fecha.toISOString()}</td>
+							</tr>
+							<tr>
+								<td>Hora</td>
+								<td>{fecha.toLocaleTimeString()}</td>
+							</tr>
+							<tr>
+								<td>Fecha UTC</td>
+								<td>{fecha.toUTCString()}</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<br/>
+					<h4>Usando Vectores:</h4>
+					<p>El vector nombres de tipo String, contiene {nombres.length} elementos.</p>
+
+					{nombres.map((nombre, index) => (
+						<p key={index}>
+							{index + 1 + '. ' + nombre + ' '}
+						</p>
+
+					))
+					}
+					
+					<br/>
+					<p>El vector familia de tipo compuesto, contiene {familia.length} elementos.</p>
+
+					{familia.map((miembro, index) => (
+						<p key={index}>
+							{index + 1 + '. ' + miembro.nombre + ' - ' + miembro.edad + ' años'}
+						</p>))
+					}
+
+					<br/>
+					<h4>Usando Matrices:</h4>
+					<p>La matriz de series de TV tiene {matriz.length} filas y {matriz[0].length} columnas posibles.</p>
+
+					{matriz.map((fila, index) => (
+						fila.map((miembro, index) => (
+							<p key={index}>
+								{index + 1 + '. ' + miembro.nombre + ' - ' + miembro.edad + ' años'}
+							</p>))
+					))
+					}
+
+				</div>
+			);
+		}
+
+		export default Variables;
+		
+		
+	- Save changes
+	
+	
+Step 20 - Update Funciones page:
+
+	- Open src/pages/funciones.tsx and writes:
+		
+		import React from 'react';
+
+		// standard function
+		function suma(a:number, b:number) {
+			return a + b;
+		}
+
+		// arrow function
+		const resta = (a:number, b:number) => {
+			return a - b;
+		}
+
+		// arrow function with implicit return
+		const multiplicacion = (a:number, b:number) => a * b;
+
+		// arrow function with implicit return and one parameter
+		const cuadrado = (a:number) => a * a;
+
+		// arrow function with implicit return and no parameters
+		const fecha = () => new Date();
+
+		const saludo = () => 'Hola';
+
+		const saludo2 = () => {
+			return 'Hola';
+		}
+
+		const Funciones = () => {
+			return (
+				<div className="container">
+					<h1>Funciones o subrutinas</h1>
+					<br/>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>Función</th>
+								<th>Definición</th>
+								<th>Tipo</th>
+								<th>Valor</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>suma(10, 20)</td>
+								<td>Standard function</td>
+								<td>{typeof suma}</td>
+								<td>{suma(10, 20)}</td>
+							</tr>
+							<tr>
+								<td>resta(10, 20)</td>
+								<td>Arrow function</td>
+								<td>{typeof resta}</td>
+								<td>{resta(10, 20)}</td>
+							</tr>
+							<tr>
+								<td>multiplicacion(10, 20)</td>
+								<td>Arrow function with implicit return</td>
+								<td>{typeof multiplicacion}</td>
+								<td>{multiplicacion(10, 20)}</td>
+							</tr>
+							<tr>
+								<td>cuadrado(10)</td>
+								<td>Arrow function with implicit return and one parameter</td>
+								<td>{typeof cuadrado}</td>
+								<td>{cuadrado(10)}</td>
+							</tr>
+							<tr>
+								<td>fecha().toString()</td>
+								<td>Arrow function with implicit return and no parameters</td>
+								<td>{typeof fecha}</td>
+								<td>{fecha().toString()}</td>
+							</tr>
+							<tr>
+								<td>saludo()</td>
+								<td>Arrow function with implicit return and no parameters</td>
+								<td>{typeof saludo}</td>
+								<td>{saludo()}</td>
+							</tr>
+							<tr>
+								<td>saludo2()</td>
+								<td>Arrow function with implicit return and no parameters</td>
+								<td>{typeof saludo2}</td>
+								<td>{saludo2()}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			);
+		}
+
+		export default Funciones;		
+		
+		
+	- Save changes	
+			
+			
+Step 21 - Update Modulos page:
+
+	- Create a new component, called Component.tsx, into the src/components folder: 
+		
+		- Open src/components/Component.tsx and write:
+		
+			import React, {useState} from "react";
+
+			const myComponent = () => {
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				const [texto, setTexto] = useState("Hola Mundo");
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				const [texto2, setTexto2] = useState();
+
+				const buttonClick = () => {
+					// @ts-ignore
+					setTexto2(texto)
+				}
+
+				return (
+					<div>
+						<h5>Mi primer Componente</h5>
+						<div>
+							<input type="text" value={texto} onChange={(e) => setTexto(e.target.value)}/>
+							<button onClick={buttonClick}>Actualizar</button>
+							<p>{texto}</p>
+							<p>{texto2}</p>
+						</div>
+					</div>
+				)
+			}
+
+			export default myComponent;
+
+			
+		- Save changes
+
+
+	- Open src/pages/modulos.tsx and writes:
+		
+		import React from 'react';
+		import myComponent from "../components/myComponent";
+
+		const Modulos = () => {
+			return (
+				<div className="container">
+					<h3>Uso de un componente externo</h3>
+					<p>
+						Componente para el uso de objetos de formulario web.<br/>
+					</p>
+					<br/>
+					{myComponent()}
+
+				</div>
+			);
+		}
+		
+		export default Modulos;
+			
+			
+	- Save changes.	
+		
+		
+Step 22 - Update index component
+
+	- Open src/index.tsx
+	
+		- Delete all code and writes:
+		
+			import React from 'react';
+			import ReactDOM from 'react-dom/client';
+			import './index.css'
+
+			import App from './App';
+			import NavBar from "./components/navBar";
+			import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+			import Acercade from "./pages/acercade";
+			import Variables from "./pages/variables";			
+			import Funciones from "./pages/funciones";
+			import Modulos from "./pages/modulos";
+
+			const root = ReactDOM.createRoot(
+			  document.getElementById('root') as HTMLElement
+			);
+
+			root.render(
+			  <BrowserRouter>
+				<NavBar />
+				  <Routes>
+					  <Route path="/" element={<App />} />
+					  <Route path="/acercade" element={<Acercade />} />
+					  <Route path="/variables" element={<Variables />} />					  
+					  <Route path="/funciones" element={<Funciones />} />
+					  <Route path="/modulos" element={<Modulos />} />
+				  </Routes>
+			  </BrowserRouter>
+			);
+			
+			
+		- Save changes.	
+		
+	- Review the Web Browser and try to use the menu options
+
+	- Be happy again...!
+	
+	
+Step 23 - Create Dockerfile
+
+	- Into the root project
+	
+		- Right click and select new file:
+		
+			- Name.......: Dockerfile
+			- Extension..: without extension
+
+	- Open Dockerfile and writes the next code:
+	
+		FROM node:20-alpine
+
+		LABEL authors="jruiz"
+
+		RUN mkdir -p /apps/testing_01
+		WORKDIR /apps/testing_01
+
+		COPY package.json /apps/testing_01/
+		RUN npm install
+		COPY . /apps/testing_01/
+
+		EXPOSE 3000
+		CMD ["npm", "start"]
+	
+
+	- Save changes
+
+
+Step 24 - Create Dockerfile image
+
+	- Into the terminal window of the Visual Code, execute the next commands:
+	
+		docker build -t testing_01-image .		
+		
+			- the above step take awhile, explicitly the "RUN npm install" instruction
+			- be patience please
+			
+			- you can see the next verbose information
+			
+				[+] Building 366.8s (11/11) FINISHED                                                                                                                     docker:default
+				 => [internal] load build definition from Dockerfile                                                                                                               0.2s
+				 => => transferring dockerfile: 251B                                                                                                                               0.0s
+				 => [internal] load .dockerignore                                                                                                                                  0.1s
+				 => => transferring context: 2B                                                                                                                                    0.0s
+				 => [internal] load metadata for docker.io/library/node:20-alpine                                                                                                  2.1s
+				 => [1/6] FROM docker.io/library/node:20-alpine@sha256:b1789b7be6aa16afd642eaaaccdeeeb33bd8f08e69b3d27d931aa9665b731f01                                           30.5s
+				 => => resolve docker.io/library/node:20-alpine@sha256:b1789b7be6aa16afd642eaaaccdeeeb33bd8f08e69b3d27d931aa9665b731f01                                            0.1s
+				 => => sha256:6bff055d05cc0a93fd9a955ade6f25ab4623f3c9823053b4362576d4a024828b 7.13kB / 7.13kB                                                                     0.0s
+				 => => sha256:96526aa774ef0126ad0fe9e9a95764c5fc37f409ab9e97021e7b4775d82bf6fa 3.40MB / 3.40MB                                                                     0.9s
+				 => => sha256:4d922691d718dabc542bcc05349c0d1fd55d67728111c2797e649b378c682704 41.96MB / 41.96MB                                                                   5.0s
+				 => => sha256:b1789b7be6aa16afd642eaaaccdeeeb33bd8f08e69b3d27d931aa9665b731f01 1.43kB / 1.43kB                                                                     0.0s
+				 => => sha256:5ffaaf1eed5668f16f2d59130993b6b4e91263ea73d7556e44faa341d7d1c78a 1.16kB / 1.16kB                                                                     0.0s
+				 => => sha256:8504be75e4ac94664146fe3c81584e386a44c501790c91dfe599313744d28ae4 2.34MB / 2.34MB                                                                     1.8s
+				 => => extracting sha256:96526aa774ef0126ad0fe9e9a95764c5fc37f409ab9e97021e7b4775d82bf6fa                                                                          0.9s
+				 => => sha256:8fe61125fbb93e3be3218d688f4a57d547cbdce0a66246671115146c6bd8491f 450B / 450B                                                                         1.3s
+				 => => extracting sha256:4d922691d718dabc542bcc05349c0d1fd55d67728111c2797e649b378c682704                                                                         23.2s
+				 => => extracting sha256:8504be75e4ac94664146fe3c81584e386a44c501790c91dfe599313744d28ae4                                                                          1.0s
+				 => => extracting sha256:8fe61125fbb93e3be3218d688f4a57d547cbdce0a66246671115146c6bd8491f                                                                          0.0s
+				 => [internal] load build context                                                                                                                                 61.7s
+				 => => transferring context: 304.21MB                                                                                                                             61.4s
+				 => [2/6] RUN mkdir -p /apps/testing_01                                                                                                                            4.1s
+				 => [3/6] WORKDIR /apps/testing_01                                                                                                                                 0.5s
+				 => [4/6] COPY package.json /apps/testing_01/                                                                                                                      0.9s
+				 => [5/6] RUN npm install                                                                                                                                        287.6s
+				 => [6/6] COPY . /apps/testing_01/                                                                                                                                 7.9s
+				 => exporting to image                                                                                                                                             6.3s
+				 => => exporting layers                                                                                                                                            6.3s
+				 => => writing image sha256:ae6aed47ee210c001f9b8775736deb669941b6e7aff265d782b79f61a4570a10                                                                       0.0s
+				 => => naming to docker.io/library/testing_01-image
+			
+		
+		docker run --name testing_01 -p 3000:3000 -d testing_01-image
+		
+			- you can see a text same this:
+			
+				e5a8a7dd04ac7644afa3e6519c4004af55e2cc4ff462d2cbfb5eba5d9c0c20ae
+		
+
+Step 25 - Testing the new Docker constainer:
+
+	- Into the virtual server, execute:
+	
+		- To see the new images:
+		
+			docker images
+			
+			- You can see:
+			
+				REPOSITORY         TAG       IMAGE ID       CREATED          SIZE
+				testing_01-image   latest    0eac0f61c658   21 minutes ago   834MB
+				hello-world        latest    9c7a54a9a43c   6 months ago     13.3kB
+		
+
+		- To see the running docker:
+		
+			docker ps -a
+			
+			- You can see:
+			
+				CONTAINER ID   IMAGE              COMMAND                  CREATED          STATUS                  PORTS                                       NAMES
+				e5a8a7dd04ac   testing_01-image   "docker-entrypoint.s…"   23 minutes ago   Up 23 minutes           0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   testing_01
+				275082746b08   hello-world        "/hello"                 3 days ago       Exited (0) 3 days ago                                               quirky_khorana
+			
+
+		- For local testing
+
+			curl http://10.236.2.115:3000		(you must changes ip address)
+			
+			- You can see:
+			
+				<!DOCTYPE html>
+				<html lang="en">
+				  <head>
+					<meta charset="utf-8" />
+					<link rel="icon" href="/favicon.ico" />
+					<meta name="viewport" content="width=device-width, initial-scale=1" />
+					<meta name="theme-color" content="#000000" />
+					<meta
+					  name="description"
+					  content="Web site created using create-react-app"
+					/>
+					<link rel="apple-touch-icon" href="/logo192.png" />
+					<!--
+					  manifest.json provides metadata used when your web app is installed on a
+					  user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+					-->
+					<link rel="manifest" href="/manifest.json" />
+					<!--
+					  Notice the use of  in the tags above.
+					  It will be replaced with the URL of the `public` folder during the build.
+					  Only files inside the `public` folder can be referenced from the HTML.
+
+					  Unlike "/favicon.ico" or "favicon.ico", "/favicon.ico" will
+					  work correctly both with client-side routing and a non-root public URL.
+					  Learn how to configure a non-root public URL by running `npm run build`.
+					-->
+					<title>React App</title>
+				  <script defer src="/static/js/bundle.js"></script></head>
+				  <body>
+					<noscript>You need to enable JavaScript to run this app.</noscript>
+					<div id="root"></div>
+					<!--
+					  This HTML file is a template.
+					  If you open it directly in the browser, you will see an empty page.
+
+					  You can add webfonts, meta tags, or analytics to this file.
+					  The build step will place the bundled scripts into the <body> tag.
+
+					  To begin the development, run `npm start` or `yarn start`.
+					  To create a production bundle, use `npm run build` or `yarn build`.
+					-->
+				  </body>
+				</html>			
+			
+		
+		- For remote testing
+		
+			- Open your favorite web browser application and use the URL: http://10.236.2.115:3000
+			- remember changes the ip address		
+
+
+Step 26 - Remember be happy
+
+		
+------------------------------------------------------------
+DOCKER COMMANDS
+------------------------------------------------------------
+
+	Command                          | Description
+	---------------------------------+----------------------------------------
+	docker images ls                 | Show downloaded images
+	---------------------------------+----------------------------------------
+	docker image rm name             | Delete a selected image
+	---------------------------------+----------------------------------------
+	docker image prune               | Clear old images
+	---------------------------------+----------------------------------------
+	docker image prune -a            | Clear all images without use       
+	---------------------------------+----------------------------------------
+	docker ps                        | Show only active containers
+	---------------------------------+----------------------------------------
+	docker ps -a                     | Show all containers
+	---------------------------------+----------------------------------------
+	docker ps -l                     | Show the new containers
+	---------------------------------+----------------------------------------
+	docker start container_id/name   | Start container by id or by name
+	---------------------------------+----------------------------------------
+	docker stop container_id/name    | Stop container by id or by name
+	---------------------------------+----------------------------------------
+	docker rm container_id/name      | Delete container by id or by name
+	---------------------------------+----------------------------------------
+	docker run -it container-id/name | Execute shell of a running container
+	---------------------------------+----------------------------------------
+	docker builder prune -a          | Limpia cache de creación de imágenes   
+	---------------------------------+----------------------------------------
